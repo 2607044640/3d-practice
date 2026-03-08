@@ -386,7 +386,9 @@ script = ExtResource("1_tkhp1")
 IdleAnimation = ExtResource("1_v3cbf")
 RunAnimation = ExtResource("3_1w2ty")
 JumpStartAnimation = ExtResource("2_v3cbf")
+JumpStartAnimationSpeed = 0.6
 JumpLoopAnimation = SubResource("Animation_7apuw")
+JumpLoopAnimationSpeed = 0.6
 metadata/_custom_type_script = "uid://b8quvaxkliga3"
 
 [resource]

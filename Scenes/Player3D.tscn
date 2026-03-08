@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://cayvcox1eoy8a" path="res://addons/CoreComponents/AnimationControllerComponent.cs" id="4_animation"]
 [ext_resource type="PackedScene" uid="uid://djlw4y8gso2b3" path="res://Scenes/Kuno1.02/kuno_1_02.tscn" id="5_kuno"]
 [ext_resource type="Resource" uid="uid://cwx7kss3kbl0g" path="res://Animations/Player_CharacterAnimationConfig.tres" id="5_ykoex"]
+[ext_resource type="Script" uid="uid://cu08gpa84apih" path="res://addons/CoreComponents/CharacterRotationComponent.cs" id="6_rotation"]
+[ext_resource type="Script" uid="uid://du68so1pwaj3a" path="res://addons/CoreComponents/CameraControlComponent.cs" id="7_camera"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gep6n"]
 
@@ -25,6 +27,12 @@ script = ExtResource("3_input")
 script = ExtResource("4_animation")
 AnimationBlendTime = 0.3
 AnimConfig = ExtResource("5_ykoex")
+
+[node name="CharacterRotationComponent" type="Node" parent="."]
+script = ExtResource("6_rotation")
+
+[node name="CameraControlComponent" type="Node" parent="."]
+script = ExtResource("7_camera")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1023033183]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
