@@ -58,12 +58,32 @@ public partial class Enemy : CharacterBody3D
 /// AI 输入组件
 /// 
 /// 模拟 PlayerInputComponent 的接口，但输入来自 AI 决策。
-/// 继承 BaseInputComponent，实现与 PlayerInputComponent 相同的接口。
-/// 这样就可以复用所有依赖 BaseInputComponent 的组件。
+/// 实现 IEntityInput 接口，与 PlayerInputComponent 共享相同的契约。
+/// 这样就可以复用所有依赖 IEntityInput 的组件。
 /// </summary>
 [GlobalClass]
-public partial class AIInputComponent : BaseInputComponent
+[Component(typeof(CharacterBody3D))]
+public partial class AIInputComponent : Node, IEntityInput
 {
+    #region IEntityInput Implementation
+    
+    /// <summary>
+    /// 移动输入事件
+    /// </summary>
+    public event Action<Vector2> OnMovementInput;
+    
+    /// <summary>
+    /// 跳跃输入事件
+    /// </summary>
+    public event Action OnJumpJustPressed;
+    
+    /// <summary>
+    /// 是否启用输入处理
+    /// </summary>
+    [Export] public bool InputEnabled { get; set; } = true;
+    
+    #endregion
+    
     #region Export Properties
     
     /// <summary>
@@ -99,7 +119,8 @@ public partial class AIInputComponent : BaseInputComponent
     
     public override void _Ready()
     {
-        base._Ready(); // 调用基类的 InitializeComponent
+        InitializeComponent();
+        GD.Print($"AIInputComponent: 已初始化，Type={Type}");
     }
     
     public override void _Process(double delta)
@@ -125,7 +146,7 @@ public partial class AIInputComponent : BaseInputComponent
                 UpdateChase();
                 break;
             case AIState.Idle:
-                TriggerMovementInput(Vector2.Zero);
+                OnMovementInput?.Invoke(Vector2.Zero);
                 break;
         }
         
@@ -137,7 +158,7 @@ public partial class AIInputComponent : BaseInputComponent
     {
         if (PatrolPoints == null || PatrolPoints.Length == 0)
         {
-            TriggerMovementInput(Vector2.Zero);
+            OnMovementInput?.Invoke(Vector2.Zero);
             return;
         }
         
@@ -147,7 +168,7 @@ public partial class AIInputComponent : BaseInputComponent
         
         // 转换为 2D 输入（X, Z）
         Vector2 input = new Vector2(direction.X, direction.Z);
-        TriggerMovementInput(input);
+        OnMovementInput?.Invoke(input);
         
         // 到达巡逻点，切换到下一个
         if (parent.GlobalPosition.DistanceTo(targetPoint.GlobalPosition) < 1.0f)
@@ -167,7 +188,7 @@ public partial class AIInputComponent : BaseInputComponent
         // 计算到目标的方向
         Vector3 direction = (Target.GlobalPosition - parent.GlobalPosition).Normalized();
         Vector2 input = new Vector2(direction.X, direction.Z);
-        TriggerMovementInput(input);
+        OnMovementInput?.Invoke(input);
         
         // 如果目标太远，返回巡逻
         if (parent.GlobalPosition.DistanceTo(Target.GlobalPosition) > DetectionRange * 1.5f)

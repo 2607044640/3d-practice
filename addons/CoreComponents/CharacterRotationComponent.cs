@@ -3,7 +3,7 @@ using Godot.Composition;
 
 /// <summary>
 /// 角色旋转组件 - 负责让角色模型面向移动方向
-/// 依赖抽象的 BaseInputComponent，可复用于玩家和 AI
+/// 依赖 IEntityInput 接口，通过 ComponentHelper 手动查找（支持多态）
 /// </summary>
 [GlobalClass]
 [Component(typeof(CharacterBody3D))]
@@ -32,7 +32,7 @@ public partial class CharacterRotationComponent : Node
     
     private Node3D _characterModel;
     private Vector2 _currentInputDir = Vector2.Zero;
-    private BaseInputComponent _inputComponent;
+    private IEntityInput entityInput;
     
     #endregion
 
@@ -74,26 +74,19 @@ public partial class CharacterRotationComponent : Node
     /// </summary>
     public void OnEntityReady()
     {
-        // 手动查找 BaseInputComponent（支持多态）
-        foreach (var child in parent.GetChildren())
-        {
-            if (child is BaseInputComponent inputComp)
-            {
-                _inputComponent = inputComp;
-                break;
-            }
-        }
+        // 查找 IEntityInput 实现（支持多态）
+        entityInput = parent.GetComponent<IEntityInput>();
         
-        if (_inputComponent == null)
+        if (entityInput == null)
         {
-            GD.PushError("CharacterRotationComponent: 未找到 BaseInputComponent！");
+            GD.PushError("CharacterRotationComponent: 未找到 IEntityInput 实现！");
             return;
         }
         
         // 订阅事件
-        _inputComponent.OnMovementInput += HandleMovementInput;
+        entityInput.OnMovementInput += HandleMovementInput;
         
-        GD.Print($"CharacterRotationComponent: 已订阅 InputComponent 事件 ({_inputComponent.GetType().Name}) ✓");
+        GD.Print($"✓ CharacterRotationComponent: 已订阅 {entityInput.GetType().Name} 事件");
     }
     
     public override void _Process(double delta)
@@ -103,10 +96,10 @@ public partial class CharacterRotationComponent : Node
     
     public override void _ExitTree()
     {
-        // 取消订阅事件
-        if (_inputComponent != null)
+        // 取消订阅事件，防止内存泄漏
+        if (entityInput != null)
         {
-            _inputComponent.OnMovementInput -= HandleMovementInput;
+            entityInput.OnMovementInput -= HandleMovementInput;
         }
     }
     
