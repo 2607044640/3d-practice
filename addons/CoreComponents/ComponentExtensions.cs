@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+// ReSharper disable All
+
 /// <summary>
 /// 组件查找扩展方法 - 简化组件依赖查找
 /// 提供类似 Unity 的 GetComponent API
@@ -10,18 +12,18 @@ using System.Linq;
 public static class ComponentExtensions
 {
     #region 基础查找方法
-    
+
     /// <summary>
     /// 在子节点中查找指定类型的组件（支持多态）
     /// </summary>
     /// <typeparam name="T">组件类型</typeparam>
     /// <param name="node">父节点</param>
     /// <returns>找到的组件，未找到返回 null</returns>
-    public static T GetComponentInChildren<T>(this Node node) where T : Node
+    private static T GetComponentInChildren<T>(this Node node) where T : Node
     {
         return node.GetChildren().OfType<T>().FirstOrDefault();
     }
-    
+
     /// <summary>
     /// 在子节点中查找所有指定类型的组件
     /// </summary>
@@ -32,7 +34,7 @@ public static class ComponentExtensions
     {
         return node.GetChildren().OfType<T>().ToList();
     }
-    
+
     /// <summary>
     /// 在子节点中查找指定类型的组件，未找到则报错
     /// </summary>
@@ -46,13 +48,14 @@ public static class ComponentExtensions
         {
             GD.PushError($"Required component {typeof(T).Name} not found in {node.Name}");
         }
+
         return component;
     }
-    
+
     #endregion
 
     #region 输入组件专用方法
-    
+
     /// <summary>
     /// 查找并订阅输入组件（专用辅助方法）
     /// 自动查找 BaseInputComponent 并订阅事件
@@ -66,25 +69,28 @@ public static class ComponentExtensions
         Action<Vector2> onMovement,
         Action onJump = null)
     {
-        var input = parent.GetComponentInChildren<BaseInputComponent>();
-        
+        var input = parent.GetRequiredComponentInChildren<BaseInputComponent>();
+
         if (input == null)
         {
-            GD.PushError($"未找到 BaseInputComponent in {parent.Name}");
             return null;
         }
-        
+
         // 订阅事件
-        input.OnMovementInput += onMovement;
+        if (onMovement != null)
+        {
+            input.OnMovementInput += onMovement;
+        }
+
         if (onJump != null)
         {
             input.OnJumpJustPressed += onJump;
         }
-        
+
         GD.Print($"✓ 已订阅 {input.GetType().Name} 事件");
         return input;
     }
-    
+
     /// <summary>
     /// 取消订阅输入组件
     /// </summary>
@@ -97,18 +103,18 @@ public static class ComponentExtensions
         Action onJump = null)
     {
         if (input == null) return;
-        
+
         input.OnMovementInput -= onMovement;
         if (onJump != null)
         {
             input.OnJumpJustPressed -= onJump;
         }
     }
-    
+
     #endregion
 
     #region 调试辅助方法
-    
+
     /// <summary>
     /// 打印节点的所有子组件（调试用）
     /// </summary>
@@ -120,6 +126,6 @@ public static class ComponentExtensions
             GD.Print($"  - {child.Name} ({child.GetType().Name})");
         }
     }
-    
+
     #endregion
 }

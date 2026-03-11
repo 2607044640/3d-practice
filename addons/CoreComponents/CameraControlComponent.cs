@@ -1,8 +1,9 @@
 using Godot;
 using Godot.Composition;
+using PhantomCamera;
 
 /// <summary>
-/// 相机控制组件 - 负责处理相机旋转和鼠标输入
+/// 相机控制组件 - 负责处理相机旋转和鼠标输入（使用 PhantomCamera）
 /// </summary>
 [GlobalClass]
 [Component(typeof(CharacterBody3D))]
@@ -16,14 +17,9 @@ public partial class CameraControlComponent : Node
     [Export] public float MouseSensitivity { get; set; } = 0.002f;
     
     /// <summary>
-    /// 相机枢轴节点路径
+    /// PhantomCamera3D 节点路径
     /// </summary>
-    [Export] public NodePath CameraPivotPath { get; set; } = "CameraPivot";
-    
-    /// <summary>
-    /// SpringArm 节点路径（相对于 CameraPivot）
-    /// </summary>
-    [Export] public NodePath SpringArmPath { get; set; } = "CameraPivot/SpringArm3D";
+    [Export] public NodePath PCamPath { get; set; } = "PhantomCamera3D";
     
     /// <summary>
     /// 上下视角限制（最小角度，弧度）
@@ -39,8 +35,7 @@ public partial class CameraControlComponent : Node
 
     #region Private Fields
     
-    private Node3D _cameraPivot;
-    private SpringArm3D _springArm;
+    private PhantomCamera3D _pCam;
     
     #endregion
 
@@ -50,18 +45,25 @@ public partial class CameraControlComponent : Node
     {
         InitializeComponent();
         
-        // 初始化相机引用
-        _cameraPivot = parent.GetNodeOrNull<Node3D>(CameraPivotPath);
-        _springArm = parent.GetNodeOrNull<SpringArm3D>(SpringArmPath);
+        // 初始化 PhantomCamera3D 引用
+        var pCamNode = parent.GetNodeOrNull<Node3D>(PCamPath);
         
-        if (_cameraPivot == null || _springArm == null)
+        if (pCamNode == null)
         {
-            GD.PushWarning("CameraControlComponent: 相机节点未找到，相机控制将不可用。");
+            GD.PushError("CameraControlComponent: PhantomCamera3D 节点未找到，相机控制将不可用。");
+            return;
         }
-        else
+        
+        // 使用扩展方法转换为 PhantomCamera3D 包装类
+        _pCam = pCamNode.AsPhantomCamera3D();
+        
+        if (_pCam == null)
         {
-            GD.Print("CameraControlComponent: 相机系统已初始化 ✓");
+            GD.PushError("CameraControlComponent: 无法将节点转换为 PhantomCamera3D。");
+            return;
         }
+        
+        GD.Print("CameraControlComponent: PhantomCamera 系统已初始化 ✓");
         
         // 捕获鼠标
         Input.MouseMode = Input.MouseModeEnum.Captured;
@@ -81,21 +83,24 @@ public partial class CameraControlComponent : Node
     /// </summary>
     private void HandleCameraInput(InputEvent @event)
     {
-        if (_cameraPivot == null || _springArm == null) return;
+        if (_pCam == null) return;
         
         // 处理鼠标移动
         if (@event is InputEventMouseMotion mouseMotion && Input.MouseMode == Input.MouseModeEnum.Captured)
         {
-            // 旋转相机枢轴（左右）
-            _cameraPivot.RotateY(-mouseMotion.Relative.X * MouseSensitivity);
+            // 获取当前第三人称旋转（欧拉角，弧度）
+            Vector3 currentRotation = _pCam.GetThirdPersonRotation();
             
-            // 旋转SpringArm（上下）
-            _springArm.RotateX(mouseMotion.Relative.Y * MouseSensitivity);
-
-            // 限制上下角度
-            Vector3 springArmRotation = _springArm.Rotation;
-            springArmRotation.X = Mathf.Clamp(springArmRotation.X, MinPitch, MaxPitch);
-            _springArm.Rotation = springArmRotation;
+            // 计算新的 Yaw (Y轴，左右) 和 Pitch (X轴，上下)
+            float newYaw = currentRotation.Y - mouseMotion.Relative.X * MouseSensitivity;
+            float newPitch = currentRotation.X + mouseMotion.Relative.Y * MouseSensitivity;
+            
+            // 限制 Pitch 角度
+            newPitch = Mathf.Clamp(newPitch, MinPitch, MaxPitch);
+            
+            // 设置新的旋转
+            Vector3 newRotation = new Vector3(newPitch, newYaw, currentRotation.Z);
+            _pCam.SetThirdPersonRotation(newRotation);
         }
         
         // ESC 释放鼠标

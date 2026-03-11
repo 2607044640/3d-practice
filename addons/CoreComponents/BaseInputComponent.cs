@@ -4,8 +4,7 @@ using System;
 
 /// <summary>
 /// 输入组件抽象基类 - 实现依赖倒置原则
-/// 定义输入事件接口，允许 PlayerInput 和 AIInput 共享相同的接口
-/// 使得 MovementComponent 等执行组件可以复用于玩家和 AI
+/// MovementComponent 等执行组件可以复用于玩家和 AI
 /// </summary>
 [GlobalClass]
 [Component(typeof(CharacterBody3D))]
