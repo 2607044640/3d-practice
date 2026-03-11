@@ -4,7 +4,7 @@ using Godot.Composition;
 /// <summary>
 /// 移动组件 - 仅负责物理计算与位移
 /// 遵循单一职责原则：只处理移动，不处理输入或动画
-/// 依赖 IEntityInput 接口，通过 ComponentHelper 手动查找（支持多态）
+/// 依赖抽象的 BaseInputComponent，可复用于玩家和 AI
 /// </summary>
 [GlobalClass]
 [Component(typeof(CharacterBody3D))]
@@ -42,8 +42,8 @@ public partial class MovementComponent : Node
     // 是否请求跳跃
     private bool _jumpRequested = false;
     
-    // 输入组件引用（自动注入）
-    private IEntityInput entityInput;
+    // 输入组件引用（手动查找）
+    private BaseInputComponent _inputComponent;
     
     #endregion
 
@@ -78,20 +78,11 @@ public partial class MovementComponent : Node
     /// </summary>
     public void OnEntityReady()
     {
-        // 查找 IEntityInput 实现（支持多态）
-        entityInput = parent.GetComponent<IEntityInput>();
-        
-        if (entityInput == null)
-        {
-            GD.PushError("MovementComponent: 未找到 IEntityInput 实现！");
-            return;
-        }
-        
-        // 订阅事件
-        entityInput.OnMovementInput += HandleMovementInput;
-        entityInput.OnJumpJustPressed += HandleJumpInput;
-        
-        GD.Print($"✓ MovementComponent: 已订阅 {entityInput.GetType().Name} 事件");
+        // 使用扩展方法：一行代码搞定查找和订阅！
+        _inputComponent = parent.FindAndSubscribeInput(
+            HandleMovementInput,
+            HandleJumpInput
+        );
     }
     
     public override void _PhysicsProcess(double delta)
@@ -101,12 +92,8 @@ public partial class MovementComponent : Node
     
     public override void _ExitTree()
     {
-        // 取消订阅事件，防止内存泄漏
-        if (entityInput != null)
-        {
-            entityInput.OnMovementInput -= HandleMovementInput;
-            entityInput.OnJumpJustPressed -= HandleJumpInput;
-        }
+        // 使用扩展方法取消订阅
+        _inputComponent?.UnsubscribeInput(HandleMovementInput, HandleJumpInput);
     }
     
     #endregion

@@ -4,7 +4,6 @@ using Godot.Composition;
 /// <summary>
 /// 动画控制器组件 - 仅负责动画播放逻辑
 /// 遵循单一职责原则：只处理动画，不处理输入或移动
-/// 依赖 IEntityInput 接口，通过 ComponentHelper 手动查找（支持多态）
 /// </summary>
 [GlobalClass]
 [Component(typeof(CharacterBody3D))]
@@ -40,7 +39,6 @@ public partial class AnimationControllerComponent : Node
     private AnimationPlayer _animPlayer;
     private string _currentAnimation = "";
     private AnimationSet _animSet;
-    private IEntityInput entityInput;
     
     #endregion
 
@@ -54,41 +52,10 @@ public partial class AnimationControllerComponent : Node
         InitializeAnimation();
     }
     
-    /// <summary>
-    /// Entity 初始化完成后自动调用
-    /// </summary>
-    public void OnEntityReady()
-    {
-        // 查找 IEntityInput 实现（支持多态）
-        entityInput = parent.GetComponent<IEntityInput>();
-        
-        if (entityInput == null)
-        {
-            GD.PushError("AnimationControllerComponent: 未找到 IEntityInput 实现！");
-            return;
-        }
-        
-        // 订阅事件
-        entityInput.OnMovementInput += HandleMovementInput;
-        entityInput.OnJumpJustPressed += HandleJumpInput;
-        
-        GD.Print($"✓ AnimationControllerComponent: 已订阅 {entityInput.GetType().Name} 事件");
-    }
-    
     public override void _Process(double delta)
     {
         // 更新动画状态
         UpdateAnimation();
-    }
-    
-    public override void _ExitTree()
-    {
-        // 取消订阅事件，防止内存泄漏
-        if (entityInput != null)
-        {
-            entityInput.OnMovementInput -= HandleMovementInput;
-            entityInput.OnJumpJustPressed -= HandleJumpInput;
-        }
     }
     
     #endregion
@@ -130,28 +97,6 @@ public partial class AnimationControllerComponent : Node
             GD.PushWarning("AnimationControllerComponent: 未设置 AnimConfig！");
             GD.Print($"AnimationControllerComponent: 使用现有动画: {string.Join(", ", _animPlayer.GetAnimationList())}");
         }
-    }
-    
-    #endregion
-
-    #region Event Handlers
-    
-    /// <summary>
-    /// 处理移动输入（可用于未来扩展，如根据输入方向调整动画）
-    /// </summary>
-    private void HandleMovementInput(Vector2 inputDir)
-    {
-        // 当前实现通过 _Process 中的速度检测自动处理动画
-        // 未来可以在这里添加基于输入的动画逻辑
-    }
-    
-    /// <summary>
-    /// 处理跳跃输入
-    /// </summary>
-    private void HandleJumpInput()
-    {
-        // 跳跃动画由 UpdateAnimation() 中的 IsOnFloor() 检测自动处理
-        // 这里可以添加额外的跳跃动画逻辑（如二段跳）
     }
     
     #endregion

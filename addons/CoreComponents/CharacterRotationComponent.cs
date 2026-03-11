@@ -3,7 +3,7 @@ using Godot.Composition;
 
 /// <summary>
 /// 角色旋转组件 - 负责让角色模型面向移动方向
-/// 依赖 IEntityInput 接口，通过 ComponentHelper 手动查找（支持多态）
+/// 依赖抽象的 BaseInputComponent，可复用于玩家和 AI
 /// </summary>
 [GlobalClass]
 [Component(typeof(CharacterBody3D))]
@@ -32,7 +32,7 @@ public partial class CharacterRotationComponent : Node
     
     private Node3D _characterModel;
     private Vector2 _currentInputDir = Vector2.Zero;
-    private IEntityInput entityInput;
+    private BaseInputComponent _inputComponent;
     
     #endregion
 
@@ -74,19 +74,8 @@ public partial class CharacterRotationComponent : Node
     /// </summary>
     public void OnEntityReady()
     {
-        // 查找 IEntityInput 实现（支持多态）
-        entityInput = parent.GetComponent<IEntityInput>();
-        
-        if (entityInput == null)
-        {
-            GD.PushError("CharacterRotationComponent: 未找到 IEntityInput 实现！");
-            return;
-        }
-        
-        // 订阅事件
-        entityInput.OnMovementInput += HandleMovementInput;
-        
-        GD.Print($"✓ CharacterRotationComponent: 已订阅 {entityInput.GetType().Name} 事件");
+        // 使用扩展方法：一行代码搞定！
+        _inputComponent = parent.FindAndSubscribeInput(HandleMovementInput);
     }
     
     public override void _Process(double delta)
@@ -96,11 +85,8 @@ public partial class CharacterRotationComponent : Node
     
     public override void _ExitTree()
     {
-        // 取消订阅事件，防止内存泄漏
-        if (entityInput != null)
-        {
-            entityInput.OnMovementInput -= HandleMovementInput;
-        }
+        // 使用扩展方法取消订阅
+        _inputComponent?.UnsubscribeInput(HandleMovementInput);
     }
     
     #endregion
