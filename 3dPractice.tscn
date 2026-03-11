@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://b7tj281abbry8" path="res://Scenes/csg_combiner.tscn" id="1_oaaoo"]
 [ext_resource type="PackedScene" uid="uid://bykk4hu8cfy4" path="res://Scenes/Player3D.tscn" id="2_t0ae4"]
 [ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="3_pcam_host"]
-[ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="4_pcam"]
 
 [node name="Node3D" type="Node3D" unique_id=775918063]
 
@@ -12,15 +11,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)
 
 [node name="PhantomCameraHost" type="Node" parent="Camera3D"]
 script = ExtResource("3_pcam_host")
-
-[node name="PhantomCamera3D" type="Node3D" parent="Camera3D" node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 2.5, 4.0)
-script = ExtResource("4_pcam")
-priority = 10
-follow_mode = 6
-follow_target = NodePath("../../CharacterBody3D")
-follow_distance = 4.0
-spring_length = 4.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=215282030]
 transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 5, 0)
