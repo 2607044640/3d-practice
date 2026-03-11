@@ -7,11 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://djlw4y8gso2b3" path="res://Scenes/Kuno1.02/kuno_1_02.tscn" id="5_kuno"]
 [ext_resource type="Resource" uid="uid://cwx7kss3kbl0g" path="res://Animations/Player_CharacterAnimationConfig.tres" id="5_ykoex"]
 [ext_resource type="Script" uid="uid://cu08gpa84apih" path="res://addons/CoreComponents/CharacterRotationComponent.cs" id="6_rotation"]
-[ext_resource type="Script" uid="uid://du68so1pwaj3a" path="res://addons/CoreComponents/CameraControlComponent.cs" id="7_camera"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gep6n"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_spring"]
 
 [node name="Player3D" type="CharacterBody3D" unique_id=25344383]
 script = ExtResource("1_player")
@@ -31,25 +28,8 @@ AnimConfig = ExtResource("5_ykoex")
 [node name="CharacterRotationComponent" type="Node" parent="." unique_id=1956804117]
 script = ExtResource("6_rotation")
 
-[node name="CameraControlComponent" type="Node" parent="." unique_id=910192160]
-script = ExtResource("7_camera")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1023033183]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_gep6n")
 
 [node name="KunoSkin" parent="." unique_id=1098897115 instance=ExtResource("5_kuno")]
-
-[node name="CameraPivot" type="Node3D" parent="." unique_id=806558171]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09, 0)
-
-[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot" unique_id=913553522]
-transform = Transform3D(-1, 2.1052e-08, -1.40279e-07, -3.23484e-08, 0.929023, 0.370022, 1.38112e-07, 0.370022, -0.929023, 0, 0.34, 0)
-shape = SubResource("SphereShape3D_spring")
-spring_length = 8.0
-margin = 0.2
-
-[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D" unique_id=533002724]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1487963, -1.4547964)
-current = true
-fov = 50.0
