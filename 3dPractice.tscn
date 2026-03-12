@@ -26,8 +26,10 @@ transform = Transform3D(1, 0, 0, 0, 1.9260569, 0, 0, 0, 2.3893514, 0, 0.38452387
 [node name="CharacterBody3D" parent="." unique_id=1927585716 instance=ExtResource("2_t0ae4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6539233, 1.1352715, 0)
 
-[node name="CSGBox3D3_Ground" type="CSGBox3D" parent="." unique_id=1513348533]
-transform = Transform3D(17.040285, 0, 0, 0, 1, 0, 0, 0, 16.052887, 0, -1.4887823, 0)
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1748586005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7023537, -1.9443369, 0.51831055)
 use_collision = true
-collision_layer = 1
-collision_mask = 1
+
+[node name="CSGBox3D3_Ground" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1513348533]
+use_collision = true
+size = Vector3(14.346719, 1.305, 14.263)

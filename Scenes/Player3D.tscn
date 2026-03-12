@@ -7,17 +7,16 @@
 [ext_resource type="PackedScene" uid="uid://djlw4y8gso2b3" path="res://Scenes/Kuno1.02/kuno_1_02.tscn" id="5_kuno"]
 [ext_resource type="Resource" uid="uid://cwx7kss3kbl0g" path="res://Animations/Player_CharacterAnimationConfig.tres" id="5_ykoex"]
 [ext_resource type="Script" uid="uid://cu08gpa84apih" path="res://addons/CoreComponents/CharacterRotationComponent.cs" id="6_rotation"]
-[ext_resource type="Script" uid="uid://du68so1pwaj3a" path="res://addons/CoreComponents/CameraControlComponent.cs" id="7_camera"]
+[ext_resource type="Script" uid="uid://u8l0r7f2nkdv" path="res://addons/CoreComponents/CameraControlComponent.cs" id="7_camera"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="8_pcam"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="10_r8rhd"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gep6n"]
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_pcam"]
-radius = 0.5
-
 [sub_resource type="Resource" id="Resource_1slkm"]
 script = ExtResource("10_r8rhd")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_pcam"]
 
 [node name="Player3D" type="CharacterBody3D" unique_id=25344383]
 script = ExtResource("1_player")
@@ -46,19 +45,17 @@ shape = SubResource("CapsuleShape3D_gep6n")
 
 [node name="KunoSkin" parent="." unique_id=1098897115 instance=ExtResource("5_kuno")]
 
-[node name="PhantomCamera3D" type="Node3D" parent="." node_paths=PackedStringArray("follow_target")]
-transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 2.5, 4.0)
+[node name="PhantomCamera3D" type="Node3D" parent="." unique_id=1486773106 node_paths=PackedStringArray("follow_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
 script = ExtResource("8_pcam")
 priority = 10
 follow_mode = 6
 follow_target = NodePath("..")
 tween_resource = SubResource("Resource_1slkm")
-collision_mask = 1
-shape = SubResource("SphereShape3D_pcam")
-margin = 0.5
 follow_distance = 4.0
 spring_length = 4.0
+shape = SubResource("SphereShape3D_pcam")
+margin = 0.5
 align_transform_with_view = Callable()
 align_position_with_view = Callable()
 align_rotation_with_view = Callable()
-
