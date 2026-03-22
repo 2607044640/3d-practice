@@ -54,39 +54,22 @@
 
 ## ⏳ 待完成
 
-### 1. StateChart 场景结构创建
-**需要在 Godot 编辑器中创建**:
+### 1. Input Map 配置 ✅ 文档已更新
+**位置**: Project Settings → Input Map
 
-```
-Player3D (CharacterBody3D)
-└── StateChart
-    └── Root (ParallelState)
-        ├── Movement (CompoundState)
-        │   ├── GroundMode (AtomicState) [Initial]
-        │   └── FlyMode (AtomicState)
-        └── Action (CompoundState)
-            ├── Normal (AtomicState) [Initial]
-            ├── Attacked (AtomicState)
-            └── Dead (AtomicState)
-```
+按照 `ProjectRules.md` 中的表格添加所有输入动作。
 
-**Transitions 配置**:
-- GroundMode → FlyMode: Event="toggle_fly"
-- FlyMode → GroundMode: Event="toggle_fly"
+### 2. StateChart 场景结构创建
+**指南**: 参考 `.kiro/TempFolder/StateChart_Setup_Guide.md`
 
-### 2. Input Map 配置
-**需要在 Project Settings → Input Map 中添加**:
+需要在 Godot 编辑器中手动创建（无法使用 MCP 工具创建插件节点）。
 
-| Action | Key | 用途 |
-|--------|-----|------|
-| move_forward | W | 前进 |
-| move_back | S | 后退 |
-| move_left | A | 左移 |
-| move_right | D | 右移 |
-| jump | Space | 跳跃/上升 |
-| crouch | Ctrl | 下蹲/下降 |
-| toggle_fly | F | 切换飞行模式 |
-| interact | E | 交互（未来使用）|
+完整步骤已记录在 StateChart_Setup_Guide.md 中，包括：
+- 节点创建步骤
+- Transition 配置
+- 信号连接
+- 测试方法
+- 调试工具
 
 ### 3. AnimationTree 配置（未来增强）
 **当前状态**: 使用 AnimationPlayer 直接播放
@@ -145,13 +128,15 @@ AnimationTree
 ## 文件清单
 
 **已修改**:
-- `3d-practice/addons/A1MyAddon/CoreComponents/AnimationControllerComponent.cs`
-- `KiroWorkingSpace/.kiro/steering/ProjectRules.md`
+- `3d-practice/addons/A1MyAddon/CoreComponents/AnimationControllerComponent.cs` - 极简信号驱动重构
+- `KiroWorkingSpace/.kiro/steering/ProjectRules.md` - 添加 Input Map 配置表格
 
 **已创建**:
 - `3d-practice/addons/A1MyAddon/CoreComponents/GroundMovementComponent.cs`
 - `3d-practice/addons/A1MyAddon/CoreComponents/FlyMovementComponent.cs`
+- `3d-practice/.kiro/TempFolder/StateChart_Setup_Guide.md` - 完整创建指南
 
 **参考文档**:
 - `3d-practice/.kiro/TempFolder/StateChart_PowerSwitch_Architecture.md`
 - `3d-practice/.kiro/TempFolder/StateCharts_Research.md`
+- `3d-practice/.kiro/TempFolder/StateChart_Signal_Connection_Guide.md`

@@ -5,10 +5,10 @@ using Godot.Composition;
 /// 地面移动组件 - 处理重力、跳跃、地面移动
 /// 绑定到 StateChart 的 "GroundMode" 状态
 /// 只有在地面模式下才会被激活（Power Switch 模式）
+/// 
+/// 注意：此组件作为 GroundMode 状态节点的子节点，使用 AutoBindToParentState() 自动绑定
 /// </summary>
 [GlobalClass]
-[Component(typeof(CharacterBody3D))]
-[ComponentDependency(typeof(BaseInputComponent))]
 public partial class GroundMovementComponent : Node
 {
     #region Export Properties
@@ -26,6 +26,7 @@ public partial class GroundMovementComponent : Node
     private bool _jumpRequested = false;
     private BaseInputComponent _inputComponent;
     private Node3D _phantomCamera;
+    private CharacterBody3D _entity; // 真实的实体引用
 
     #endregion
 
@@ -33,29 +34,38 @@ public partial class GroundMovementComponent : Node
 
     public override void _Ready()
     {
-        InitializeComponent();
-        _phantomCamera = parent.GetNodeOrNull<Node3D>(PhantomCameraPath);
+        // 获取真实的实体（因为现在组件是State节点的子节点）
+        _entity = this.GetEntity<CharacterBody3D>();
+        if (_entity == null)
+        {
+            GD.PushError("GroundMovementComponent: 无法找到 CharacterBody3D 实体！");
+            return;
+        }
+
+        // 注意：不调用 InitializeComponent()，因为父节点不是实体
+        // InitializeComponent();
+        
+        _phantomCamera = _entity.GetNodeOrNull<Node3D>(PhantomCameraPath);
         
         if (_phantomCamera == null)
         {
             GD.PushWarning("GroundMovementComponent: PhantomCamera not found");
         }
-    }
-
-    public void OnEntityReady()
-    {
-        // 订阅输入事件
-        _inputComponent = parent.FindAndSubscribeInput(
+        
+        // 订阅输入事件（直接在这里订阅，不等待OnEntityReady）
+        _inputComponent = _entity.FindAndSubscribeInput(
             HandleMovementInput,
             HandleJumpInput
         );
-
-        // 【Power Switch】绑定到 GroundMode 状态
-        // 只有在地面模式下，此组件才会被唤醒执行
-        this.BindComponentToState(parent, "StateChart/Root/Movement/GroundMode");
         
-        GD.Print("GroundMovementComponent: 已绑定到 GroundMode 状态");
+        // 【Power Switch】自动绑定到父状态节点
+        this.AutoBindToParentState();
+        
+        GD.Print("GroundMovementComponent: 已完成初始化");
     }
+
+    // 不再需要 OnEntityReady，因为不使用 Composition 框架
+    // public void OnEntityReady() { }
 
     public override void _PhysicsProcess(double delta)
     {
@@ -89,23 +99,23 @@ public partial class GroundMovementComponent : Node
 
     private void ProcessGroundPhysics(double delta)
     {
-        Vector3 velocity = parent.Velocity;
+        Vector3 velocity = _entity.Velocity;
 
         // 1. 应用重力
-        if (!parent.IsOnFloor())
+        if (!_entity.IsOnFloor())
         {
             velocity.Y -= Gravity * (float)delta;
         }
 
         // 2. 处理跳跃
-        if (_jumpRequested && parent.IsOnFloor())
+        if (_jumpRequested && _entity.IsOnFloor())
         {
             velocity.Y = JumpVelocity;
             _jumpRequested = false;
             
             // 【事件驱动】通知 StateChart 跳跃发生
             // 可用于触发跳跃动画或其他状态变化
-            parent.SendStateEvent("jumped");
+            _entity.SendStateEvent("jumped");
         }
         else if (_jumpRequested)
         {
@@ -127,8 +137,8 @@ public partial class GroundMovementComponent : Node
         }
 
         // 4. 应用速度并移动
-        parent.Velocity = velocity;
-        parent.MoveAndSlide();
+        _entity.Velocity = velocity;
+        _entity.MoveAndSlide();
     }
 
     private Vector3 CalculateMovementDirection()
@@ -148,7 +158,7 @@ public partial class GroundMovementComponent : Node
         else
         {
             // 使用角色本地坐标系
-            return (parent.Transform.Basis * new Vector3(_currentInputDirection.X, 0, _currentInputDirection.Y))
+            return (_entity.Transform.Basis * new Vector3(_currentInputDirection.X, 0, _currentInputDirection.Y))
                 .Normalized();
         }
     }

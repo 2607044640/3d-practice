@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://bykk4hu8cfy4"]
 
 [ext_resource type="Script" uid="uid://yhmx8fery0rh" path="res://B1Scripts/Player3D.cs" id="1_player"]
-[ext_resource type="Script" uid="uid://d3p4hcdw648ah" path="res://addons/A1MyAddon/CoreComponents/MovementComponent.cs" id="2_movement"]
+[ext_resource type="Script" uid="uid://jvlxnylo7us3" path="res://addons/A1MyAddon/CoreComponents/FlyMovementComponent.cs" id="2_fly_movement"]
+[ext_resource type="Script" uid="uid://qmkylfkevs6i" path="res://addons/A1MyAddon/CoreComponents/GroundMovementComponent.cs" id="2_ground_movement"]
 [ext_resource type="Script" uid="uid://rsqf1fe43hno" path="res://addons/A1MyAddon/CoreComponents/PlayerInputComponent.cs" id="3_input"]
 [ext_resource type="Script" uid="uid://7xt4lw7fgw6r" path="res://addons/A1MyAddon/CoreComponents/AnimationControllerComponent.cs" id="4_animation"]
 [ext_resource type="PackedScene" uid="uid://djlw4y8gso2b3" path="res://Scenes/Kuno1.02/kuno_1_02.tscn" id="5_kuno"]
@@ -10,6 +11,11 @@
 [ext_resource type="Script" uid="uid://u8l0r7f2nkdv" path="res://addons/A1MyAddon/CoreComponents/CameraControlComponent.cs" id="7_camera"]
 [ext_resource type="Script" uid="uid://csjccrhj5wnx7" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="8_pcam"]
 [ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="10_r8rhd"]
+[ext_resource type="Script" uid="uid://couw105c3bde4" path="res://addons/godot_state_charts/state_chart.gd" id="11_gk2qc"]
+[ext_resource type="Script" uid="uid://c1vp0ojjvaby1" path="res://addons/godot_state_charts/parallel_state.gd" id="12_rgtt8"]
+[ext_resource type="Script" uid="uid://jk2jm1g6q853" path="res://addons/godot_state_charts/compound_state.gd" id="14_payr2"]
+[ext_resource type="Script" uid="uid://cf1nsco3w0mf6" path="res://addons/godot_state_charts/transition.gd" id="15_a8kom"]
+[ext_resource type="Script" uid="uid://cytafq8i1y8qm" path="res://addons/godot_state_charts/atomic_state.gd" id="17_wvucv"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gep6n"]
 
@@ -22,8 +28,8 @@ script = ExtResource("10_r8rhd")
 script = ExtResource("1_player")
 metadata/_edit_group_ = true
 
-[node name="MovementComponent" type="Node" parent="." unique_id=658748861]
-script = ExtResource("2_movement")
+[node name="FlyMovementComponent" type="Node" parent="." unique_id=658748862]
+script = ExtResource("2_fly_movement")
 
 [node name="PlayerInputComponent" type="Node" parent="." unique_id=851278383]
 script = ExtResource("3_input")
@@ -32,6 +38,9 @@ script = ExtResource("3_input")
 script = ExtResource("4_animation")
 AnimationBlendTime = 0.3
 AnimConfig = ExtResource("5_ykoex")
+
+[node name="GroundMovementComponent" type="Node" parent="." unique_id=658748861]
+script = ExtResource("2_ground_movement")
 
 [node name="CharacterRotationComponent" type="Node" parent="." unique_id=1956804117]
 script = ExtResource("6_rotation")
@@ -60,3 +69,47 @@ margin = 0.5
 align_transform_with_view = Callable()
 align_position_with_view = Callable()
 align_rotation_with_view = Callable()
+
+[node name="StateChart" type="Node" parent="." unique_id=491642213]
+script = ExtResource("11_gk2qc")
+
+[node name="Root" type="Node" parent="StateChart" unique_id=1283774687]
+script = ExtResource("12_rgtt8")
+
+[node name="Movement" type="Node" parent="StateChart/Root" unique_id=276960355]
+script = ExtResource("14_payr2")
+initial_state = NodePath("GroundMode")
+
+[node name="GroundMode" type="Node" parent="StateChart/Root/Movement" unique_id=2115986746]
+script = ExtResource("17_wvucv")
+
+[node name="Transition" type="Node" parent="StateChart/Root/Movement/GroundMode" unique_id=442039434]
+script = ExtResource("15_a8kom")
+to = NodePath("../../FlyMode")
+event = &"toggle_fly"
+delay_in_seconds = "0.0"
+
+[node name="FlyMode" type="Node" parent="StateChart/Root/Movement" unique_id=855162926]
+script = ExtResource("17_wvucv")
+
+[node name="Transition" type="Node" parent="StateChart/Root/Movement/FlyMode" unique_id=2099475594]
+script = ExtResource("15_a8kom")
+to = NodePath("../../GroundMode")
+event = &"toggle_fly"
+delay_in_seconds = "0.0"
+
+[node name="Action" type="Node" parent="StateChart/Root" unique_id=1156889959]
+script = ExtResource("14_payr2")
+initial_state = NodePath("Normal")
+
+[node name="Normal" type="Node" parent="StateChart/Root/Action" unique_id=1609847974]
+script = ExtResource("17_wvucv")
+
+[node name="Attacked" type="Node" parent="StateChart/Root/Action" unique_id=1589841460]
+script = ExtResource("17_wvucv")
+
+[node name="Dead" type="Node" parent="StateChart/Root/Action" unique_id=1444409924]
+script = ExtResource("17_wvucv")
+
+[connection signal="state_entered" from="StateChart/Root/Movement/GroundMode" to="AnimationControllerComponent" method="EnterGroundMode"]
+[connection signal="state_entered" from="StateChart/Root/Movement/FlyMode" to="AnimationControllerComponent" method="EnterFlyMode"]

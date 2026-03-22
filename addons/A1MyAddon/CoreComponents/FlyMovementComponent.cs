@@ -5,10 +5,10 @@ using Godot.Composition;
 /// 飞行移动组件 - 三维全向移动，无重力
 /// 绑定到 StateChart 的 "FlyMode" 状态
 /// 只有在飞行模式下才会被激活（Power Switch 模式）
+/// 
+/// 注意：此组件作为 FlyMode 状态节点的子节点，使用 AutoBindToParentState() 自动绑定
 /// </summary>
 [GlobalClass]
-[Component(typeof(CharacterBody3D))]
-[ComponentDependency(typeof(BaseInputComponent))]
 public partial class FlyMovementComponent : Node
 {
     #region Export Properties
@@ -27,6 +27,7 @@ public partial class FlyMovementComponent : Node
     private bool _descendPressed = false; // 下降（Ctrl）
     private BaseInputComponent _inputComponent;
     private Node3D _phantomCamera;
+    private CharacterBody3D _entity; // 真实的实体引用
 
     #endregion
 
@@ -34,29 +35,38 @@ public partial class FlyMovementComponent : Node
 
     public override void _Ready()
     {
-        InitializeComponent();
-        _phantomCamera = parent.GetNodeOrNull<Node3D>(PhantomCameraPath);
+        // 获取真实的实体（因为现在组件是State节点的子节点）
+        _entity = this.GetEntity<CharacterBody3D>();
+        if (_entity == null)
+        {
+            GD.PushError("FlyMovementComponent: 无法找到 CharacterBody3D 实体！");
+            return;
+        }
+
+        // 注意：不调用 InitializeComponent()，因为父节点不是实体
+        // InitializeComponent();
+        
+        _phantomCamera = _entity.GetNodeOrNull<Node3D>(PhantomCameraPath);
         
         if (_phantomCamera == null)
         {
             GD.PushWarning("FlyMovementComponent: PhantomCamera not found");
         }
-    }
-
-    public void OnEntityReady()
-    {
-        // 订阅输入事件
-        _inputComponent = parent.FindAndSubscribeInput(
+        
+        // 订阅输入事件（直接在这里订阅，不等待OnEntityReady）
+        _inputComponent = _entity.FindAndSubscribeInput(
             HandleMovementInput,
             null // 飞行模式下跳跃键用于上升，不需要单独的跳跃处理
         );
-
-        // 【Power Switch】绑定到 FlyMode 状态
-        // 只有在飞行模式下，此组件才会被唤醒执行
-        this.BindComponentToState(parent, "StateChart/Root/Movement/FlyMode");
         
-        GD.Print("FlyMovementComponent: 已绑定到 FlyMode 状态");
+        // 【Power Switch】自动绑定到父状态节点
+        this.AutoBindToParentState();
+        
+        GD.Print("FlyMovementComponent: 已完成初始化");
     }
+
+    // 不再需要 OnEntityReady，因为不使用 Composition 框架
+    // public void OnEntityReady() { }
 
     public override void _Process(double delta)
     {
@@ -92,7 +102,7 @@ public partial class FlyMovementComponent : Node
 
     private void ProcessFlyPhysics(double delta)
     {
-        Vector3 velocity = parent.Velocity;
+        Vector3 velocity = _entity.Velocity;
         Vector3 targetVelocity = CalculateFlyTargetVelocity();
 
         // 平滑加速/减速
@@ -100,8 +110,8 @@ public partial class FlyMovementComponent : Node
         velocity = velocity.Lerp(targetVelocity, acceleration * (float)delta);
 
         // 应用速度并移动
-        parent.Velocity = velocity;
-        parent.MoveAndSlide();
+        _entity.Velocity = velocity;
+        _entity.MoveAndSlide();
     }
 
     private Vector3 CalculateFlyTargetVelocity()
@@ -128,7 +138,8 @@ public partial class FlyMovementComponent : Node
                 rightFlat.Y = 0;
                 rightFlat = rightFlat.Normalized();
 
-                horizontalMove = (rightFlat * _currentInputDirection.X + 
+                // 修复：inputDir.Y 是负值表示向前（W键），所以需要取反
+                horizontalMove = (rightFlat * _currentInputDirection.X - 
                                  forwardFlat * _currentInputDirection.Y).Normalized();
             }
 
@@ -145,12 +156,12 @@ public partial class FlyMovementComponent : Node
         else
         {
             // 无相机时使用角色本地坐标系
-            Vector3 horizontalMove = new Vector3(_currentInputDirection.X, 0, _currentInputDirection.Y);
+            Vector3 horizontalMove = new Vector3(_currentInputDirection.X, 0, -_currentInputDirection.Y);
             float verticalMove = 0;
             if (_ascendPressed) verticalMove += 1.0f;
             if (_descendPressed) verticalMove -= 1.0f;
 
-            targetVelocity = (parent.Transform.Basis * horizontalMove).Normalized() * FlySpeed +
+            targetVelocity = (_entity.Transform.Basis * horizontalMove).Normalized() * FlySpeed +
                             Vector3.Up * verticalMove * FlySpeed;
         }
 

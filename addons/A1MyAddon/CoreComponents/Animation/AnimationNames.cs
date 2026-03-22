@@ -36,6 +36,19 @@ public static class AnimationNames
     
     #endregion
 
+    #region 飞行动画
+    
+    /// <summary>飞行待机动画</summary>
+    public const string FlyIdle = "FlyIdle";
+    
+    /// <summary>飞行移动动画</summary>
+    public const string FlyMove = "FlyMove";
+    
+    /// <summary>飞行加速动画</summary>
+    public const string FlyFast = "FlyFast";
+    
+    #endregion
+
     #region 战斗动画
     
     /// <summary>攻击1动画</summary>

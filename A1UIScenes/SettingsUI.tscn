@@ -12,11 +12,12 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Background_ColorRect" type="ColorRect" parent="." unique_id=476113691]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 1.0
-offset_right = 1151.0
-offset_bottom = 647.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.15686275, 0.15686275, 0.15686275, 1)
 
 [node name="MarginContainerHelper" type="MarginContainer" parent="." unique_id=1038258113]
@@ -54,8 +55,12 @@ metadata/_custom_type_script = "uid://bk83ics8idr7w"
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainerHelper/PanelContainer/MarginContainerHelper" unique_id=464242067]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainerHelper/PanelContainer/MarginContainerHelper/VBoxContainer" unique_id=68242471]
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainerHelper/PanelContainer/MarginContainerHelper/VBoxContainer" unique_id=742875172]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainerHelper/PanelContainer/MarginContainerHelper/VBoxContainer/CenterContainer" unique_id=68242471]
+layout_mode = 2
+size_flags_horizontal = 0
 text = "Setting"
 horizontal_alignment = 1
 
@@ -101,8 +106,10 @@ size_flags_vertical = 4
 size_flags_stretch_ratio = 2.94
 value = 10.17
 
-[node name="Button" type="Button" parent="MarginContainerHelper/PanelContainer/MarginContainerHelper/VBoxContainer" unique_id=1217054756]
+[node name="CenterContainer2" type="CenterContainer" parent="MarginContainerHelper/PanelContainer/MarginContainerHelper/VBoxContainer" unique_id=1194053861]
 layout_mode = 2
-size_flags_horizontal = 4
+
+[node name="Button" type="Button" parent="MarginContainerHelper/PanelContainer/MarginContainerHelper/VBoxContainer/CenterContainer2" unique_id=1217054756]
+layout_mode = 2
 text = "SeeMore
 "

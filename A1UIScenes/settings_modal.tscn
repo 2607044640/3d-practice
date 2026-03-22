@@ -1,0 +1,317 @@
+[gd_scene format=3 uid="uid://b00ndcy4og3ig"]
+
+[ext_resource type="PackedScene" uid="uid://buutl05rvbhox" path="res://ExtractedUI_Librerama/modals/tab_modal/tab_modal.tscn" id="1_vlps4"]
+[ext_resource type="PackedScene" uid="uid://b0uxsqjutbdky" path="res://A1UIScenes/input_modal.tscn" id="3_snmab"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mk2bm"]
+content_margin_right = 4.0
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_vrodu"]
+
+[node name="SettingsModal" unique_id=1734431646 instance=ExtResource("1_vlps4")]
+script = null
+
+[node name="TabBar" parent="." index="2" unique_id=1837673581]
+current_tab = 0
+tab_count = 3
+tab_0/title = "General"
+tab_1/title = "Controls"
+tab_2/title = "Volume"
+
+[node name="General" type="VBoxContainer" parent="." index="3" unique_id=355079192]
+offset_left = 4.0
+offset_top = 35.0
+offset_right = 844.0
+offset_bottom = 569.0
+
+[node name="Language" type="HBoxContainer" parent="General" index="0" unique_id=1423914035]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="General/Language" index="0" unique_id=22164061]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Language:"
+text_overrun_behavior = 3
+
+[node name="Completion" type="Label" parent="General/Language" index="1" unique_id=1238595890]
+visible = false
+layout_mode = 2
+tooltip_text = "Shows how complete is the current translation."
+mouse_filter = 0
+theme_type_variation = &"LabelSecondary"
+
+[node name="Locales" type="OptionButton" parent="General/Language" index="2" unique_id=695934714]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text_overrun_behavior = 3
+item_count = 2
+popup/item_0/text = "System Default"
+popup/item_0/id = 0
+popup/item_1/id = 1
+popup/item_1/separator = true
+
+[node name="Fullscreen" type="CheckBox" parent="General" index="1" unique_id=1819471301]
+layout_mode = 2
+text = "Fullscreen Window"
+autowrap_mode = 3
+
+[node name="PauseFocusLost" type="CheckBox" parent="General" index="2" unique_id=1603089596]
+layout_mode = 2
+text = "Pause When the Game Loses Focus"
+autowrap_mode = 3
+
+[node name="MuteFocusLost" type="CheckBox" parent="General" index="3" unique_id=1484305047]
+layout_mode = 2
+text = "Mute When the Game Loses Focus"
+autowrap_mode = 3
+
+[node name="CommunityWarning" type="CheckBox" parent="General" index="4" unique_id=64416330]
+layout_mode = 2
+text = "Show Warning About Community Nanogames"
+autowrap_mode = 3
+
+[node name="Controls" type="VBoxContainer" parent="." index="4" unique_id=482371495]
+visible = false
+offset_left = 4.0
+offset_top = 35.0
+offset_right = 844.0
+offset_bottom = 569.0
+
+[node name="MainControl" type="HBoxContainer" parent="Controls" index="0" unique_id=2112764176]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Controls/MainControl" index="0" unique_id=1339286006]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Main Control:"
+text_overrun_behavior = 3
+
+[node name="ControlTypes" type="OptionButton" parent="Controls/MainControl" index="1" unique_id=834312255]
+layout_mode = 2
+size_flags_horizontal = 3
+text_overrun_behavior = 3
+item_count = 6
+popup/item_0/text = "Automatic"
+popup/item_0/id = 0
+popup/item_1/id = 1
+popup/item_1/separator = true
+popup/item_2/text = "Touchscreen"
+popup/item_2/id = 2
+popup/item_3/text = "Joypad"
+popup/item_3/id = 3
+popup/item_4/text = "Joypad and Touchscreen"
+popup/item_4/id = 4
+popup/item_5/text = "Keyboard and Mouse"
+popup/item_5/id = 5
+
+[node name="HSeparator" type="HSeparator" parent="Controls" index="1" unique_id=1541571868]
+layout_mode = 2
+
+[node name="SwitchTouchControls" type="CheckBox" parent="Controls" index="2" unique_id=540839698]
+visible = false
+layout_mode = 2
+text = "Switch Touch Controls' Positions"
+autowrap_mode = 3
+
+[node name="InputsSection" type="ScrollContainer" parent="Controls" index="3" unique_id=66372362]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_mk2bm")
+follow_focus = true
+
+[node name="GridContainer" type="GridContainer" parent="Controls/InputsSection" index="0" unique_id=1895905515]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Label" type="Label" parent="Controls/InputsSection/GridContainer" index="0" unique_id=712613126]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Up:"
+text_overrun_behavior = 3
+
+[node name="Up" type="Button" parent="Controls/InputsSection/GridContainer" index="1" unique_id=996986604]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_vrodu")
+text_overrun_behavior = 3
+metadata/action = "nanogame_up"
+
+[node name="Label2" type="Label" parent="Controls/InputsSection/GridContainer" index="2" unique_id=327118039]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Down:"
+text_overrun_behavior = 3
+
+[node name="Down" type="Button" parent="Controls/InputsSection/GridContainer" index="3" unique_id=1611613674]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_vrodu")
+text_overrun_behavior = 3
+metadata/action = "nanogame_down"
+
+[node name="Label3" type="Label" parent="Controls/InputsSection/GridContainer" index="4" unique_id=1176494399]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Left:"
+text_overrun_behavior = 3
+
+[node name="Left" type="Button" parent="Controls/InputsSection/GridContainer" index="5" unique_id=355475933]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_vrodu")
+text_overrun_behavior = 3
+metadata/action = "nanogame_left"
+
+[node name="Label4" type="Label" parent="Controls/InputsSection/GridContainer" index="6" unique_id=173780012]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Right:"
+text_overrun_behavior = 3
+
+[node name="Right" type="Button" parent="Controls/InputsSection/GridContainer" index="7" unique_id=928706052]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_vrodu")
+text_overrun_behavior = 3
+metadata/action = "nanogame_right"
+
+[node name="Label5" type="Label" parent="Controls/InputsSection/GridContainer" index="8" unique_id=702712540]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Action:"
+text_overrun_behavior = 3
+
+[node name="Action" type="Button" parent="Controls/InputsSection/GridContainer" index="9" unique_id=1032113534]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_vrodu")
+text_overrun_behavior = 3
+metadata/action = "nanogame_action"
+
+[node name="Label6" type="Label" parent="Controls/InputsSection/GridContainer" index="10" unique_id=1393130947]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Flipper Left:"
+text_overrun_behavior = 3
+
+[node name="FlipperLeft" type="Button" parent="Controls/InputsSection/GridContainer" index="11" unique_id=1177683947]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_vrodu")
+text_overrun_behavior = 3
+metadata/action = "nanogame_flipper_left"
+
+[node name="Label7" type="Label" parent="Controls/InputsSection/GridContainer" index="12" unique_id=1322075191]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Flipper Right:"
+text_overrun_behavior = 3
+
+[node name="FlipperRight" type="Button" parent="Controls/InputsSection/GridContainer" index="13" unique_id=592158121]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+button_group = SubResource("ButtonGroup_vrodu")
+text_overrun_behavior = 3
+metadata/action = "nanogame_flipper_right"
+
+[node name="Volume" type="VBoxContainer" parent="." index="5" unique_id=952923768]
+visible = false
+offset_left = 4.0
+offset_top = 35.0
+offset_right = 844.0
+offset_bottom = 569.0
+
+[node name="Everything" type="HBoxContainer" parent="Volume" index="0" unique_id=1385009693]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Volume/Everything" index="0" unique_id=1410509576]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Everything:"
+text_overrun_behavior = 3
+
+[node name="EverythingToggle" type="CheckButton" parent="Volume/Everything" index="1" unique_id=1459662908]
+layout_mode = 2
+metadata/bus = 1
+
+[node name="EverythingSlider" type="HSlider" parent="Volume" index="1" unique_id=1663261706]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="Music" type="HBoxContainer" parent="Volume" index="2" unique_id=1514640954]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Volume/Music" index="0" unique_id=1083637966]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Music:"
+text_overrun_behavior = 3
+
+[node name="MusicToggle" type="CheckButton" parent="Volume/Music" index="1" unique_id=1115635213]
+layout_mode = 2
+metadata/bus = 2
+
+[node name="MusicSlider" type="HSlider" parent="Volume" index="3" unique_id=1330393023]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="Effects" type="HBoxContainer" parent="Volume" index="4" unique_id=1142323193]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Volume/Effects" index="0" unique_id=79339070]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"LabelBold"
+text = "Effects:"
+text_overrun_behavior = 3
+
+[node name="EffectsToggle" type="CheckButton" parent="Volume/Effects" index="1" unique_id=1391886091]
+layout_mode = 2
+metadata/bus = 3
+
+[node name="EffectsSlider" type="HSlider" parent="Volume" index="5" unique_id=1919139294]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="InputModal" parent="." index="6" unique_id=1196051827 instance=ExtResource("3_snmab")]
+visible = false
+script = null
+
+[connection signal="item_selected" from="General/Language/Locales" to="." method="_on_languages_item_selected"]
+[connection signal="toggled" from="General/Fullscreen" to="." method="_on_fullscreen_toggled"]
+[connection signal="toggled" from="General/PauseFocusLost" to="." method="_on_pause_focus_lost_toggled"]
+[connection signal="toggled" from="General/MuteFocusLost" to="." method="_on_mute_focus_lost_toggled"]
+[connection signal="toggled" from="General/CommunityWarning" to="." method="_on_community_warning_toggled"]
+[connection signal="item_selected" from="Controls/MainControl/ControlTypes" to="." method="_on_control_types_item_selected"]
+[connection signal="toggled" from="Controls/SwitchTouchControls" to="." method="_on_switch_touch_controls_toggled"]
+[connection signal="pressed" from="Controls/InputsSection/GridContainer/Up" to="InputModal" method="popup_centered"]
+[connection signal="pressed" from="Controls/InputsSection/GridContainer/Down" to="InputModal" method="popup_centered"]
+[connection signal="pressed" from="Controls/InputsSection/GridContainer/Left" to="InputModal" method="popup_centered"]
+[connection signal="pressed" from="Controls/InputsSection/GridContainer/Right" to="InputModal" method="popup_centered"]
+[connection signal="pressed" from="Controls/InputsSection/GridContainer/Action" to="InputModal" method="popup_centered"]
+[connection signal="pressed" from="Controls/InputsSection/GridContainer/FlipperLeft" to="InputModal" method="popup_centered"]
+[connection signal="pressed" from="Controls/InputsSection/GridContainer/FlipperRight" to="InputModal" method="popup_centered"]

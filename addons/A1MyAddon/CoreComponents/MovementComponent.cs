@@ -91,7 +91,7 @@ public partial class MovementComponent : Node
         // 【核心】将组件生命周期绑定到状态机
         // 只有当状态机进入 "Exploration" 状态时，此组件才会被唤醒
         // 退出该状态时，组件自动休眠，无需任何内部判断！
-        this.BindComponentToState(parent, "StateChart/Root/GameFlow/Exploration");
+        this.BindComponentToStateNode(parent, "StateChart/Root/GameFlow/Exploration");
     }
 
     public override void _PhysicsProcess(double delta)

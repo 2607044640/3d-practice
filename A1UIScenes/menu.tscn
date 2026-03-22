@@ -1,0 +1,259 @@
+[gd_scene format=3 uid="uid://b4woicggddkls"]
+
+[ext_resource type="ButtonGroup" uid="uid://cmxp6rtfetvw1" path="res://ExtractedUI_99Managers/theme_base/button_groups/button_group.tres" id="3_3grf7"]
+[ext_resource type="LabelSettings" uid="uid://b4gu78rjvdfx4" path="res://ExtractedUI_99Managers/theme_base/label/label_settings_title.tres" id="3_itbqv"]
+[ext_resource type="LabelSettings" uid="uid://cyq8wt6xvdpr" path="res://ExtractedUI_99Managers/theme_base/label/label_settings_big.tres" id="5_35w66"]
+[ext_resource type="PackedScene" uid="uid://bpvg2vhxml3a1" path="res://ExtractedUI_99Managers/ui_components/base/confirm_dialog/default_confirm_dialog.tscn" id="6_itbqv"]
+
+[node name="Menu" type="Control" unique_id=2142273791]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainView" type="MarginContainer" parent="." unique_id=1942137397]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainView" unique_id=1959133243]
+layout_mode = 2
+theme_override_constants/separation = 85
+
+[node name="Top" type="VBoxContainer" parent="MainView/VBoxContainer" unique_id=766873823]
+layout_mode = 2
+size_flags_vertical = 2
+alignment = 1
+
+[node name="Text" type="RichTextLabel" parent="MainView/VBoxContainer/Top" unique_id=1294484399]
+layout_mode = 2
+size_flags_horizontal = 3
+bbcode_enabled = true
+text = "[b]This is a Early Access game.[/b]
+Expect bugs, missing features and breaking changes.
+Please report bugs and feedback at [url]xxxxxxxxxxx[/url]"
+fit_content = true
+autowrap_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainView/VBoxContainer" unique_id=1614869062]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="ActiveSaveGame" type="VBoxContainer" parent="MainView/VBoxContainer/VBoxContainer" unique_id=1396423901]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+alignment = 2
+
+[node name="SaveGameTitle" type="Label" parent="MainView/VBoxContainer/VBoxContainer/ActiveSaveGame" unique_id=79942714]
+unique_name_in_owner = true
+auto_translate_mode = 2
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+text = "Bolzano, Simon Dalvai"
+label_settings = ExtResource("3_itbqv")
+autowrap_mode = 2
+
+[node name="SaveGameInfo" type="Label" parent="MainView/VBoxContainer/VBoxContainer/ActiveSaveGame" unique_id=1202611133]
+unique_name_in_owner = true
+auto_translate_mode = 2
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+text = "1. Serie A
+24.08.2042"
+autowrap_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="MainView/VBoxContainer/VBoxContainer" unique_id=2008071811]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="ContinueGame" type="Button" parent="MainView/VBoxContainer/VBoxContainer/Buttons" unique_id=1970121727]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_top = NodePath("../Exit")
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_pressed = true
+button_group = ExtResource("3_3grf7")
+text = "Continue"
+
+[node name="NewGame" type="Button" parent="MainView/VBoxContainer/VBoxContainer/Buttons" unique_id=1962404506]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_3grf7")
+text = "New game"
+
+[node name="LoadGame" type="Button" parent="MainView/VBoxContainer/VBoxContainer/Buttons" unique_id=554751032]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_3grf7")
+text = "Load game"
+
+[node name="Editor" type="Button" parent="MainView/VBoxContainer/VBoxContainer/Buttons" unique_id=200102150]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_3grf7")
+text = "Editor"
+
+[node name="Settings" type="Button" parent="MainView/VBoxContainer/VBoxContainer/Buttons" unique_id=1665127133]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_3grf7")
+text = "Settings"
+
+[node name="About" type="Button" parent="MainView/VBoxContainer/VBoxContainer/Buttons" unique_id=1945112243]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_3grf7")
+text = "About"
+
+[node name="Exit" type="Button" parent="MainView/VBoxContainer/VBoxContainer/Buttons" unique_id=1269506360]
+unique_name_in_owner = true
+layout_mode = 2
+focus_neighbor_left = NodePath("../../../Links/Website")
+focus_neighbor_bottom = NodePath("../../../Links/WishlistSteam")
+theme_type_variation = &"ButtonFlat"
+toggle_mode = true
+button_group = ExtResource("3_3grf7")
+text = "Exit"
+
+[node name="Links" type="HBoxContainer" parent="MainView/VBoxContainer" unique_id=973324233]
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_constants/separation = 15
+alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Website" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=883182898]
+auto_translate_mode = 2
+layout_mode = 2
+focus_neighbor_left = NodePath("../Reddit")
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_right = NodePath("../WishlistSteam")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "99managers.org"
+uri = "https://99managers.org"
+
+[node name="Mastodon" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=129319026]
+auto_translate_mode = 2
+layout_mode = 2
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Mastodon"
+uri = "https://mastodon.social/@99managers"
+
+[node name="Matrix" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=922873354]
+auto_translate_mode = 2
+layout_mode = 2
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Matrix"
+uri = "https://matrix.to/#/#99managers:matrix.org"
+
+[node name="Discord" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=149573034]
+auto_translate_mode = 2
+layout_mode = 2
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Discord"
+uri = "https://discord.gg/a5DSHZKkA8"
+
+[node name="Reddit" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=270441329]
+auto_translate_mode = 2
+layout_mode = 2
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Reddit"
+uri = "https://www.reddit.com/r/99Managers/"
+
+[node name="SourceCode" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=774242006]
+layout_mode = 2
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Source code"
+uri = "https://codeberg.org/dulvui/99managers-futsal-edition"
+
+[node name="IssueTracker" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=1531220232]
+layout_mode = 2
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Issue Tracker"
+uri = "https://codeberg.org/dulvui/99managers-futsal-edition/issues/"
+
+[node name="Translations" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=2108104287]
+layout_mode = 2
+focus_neighbor_top = NodePath("../../VBoxContainer/Buttons/Exit")
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Translations"
+uri = "https://hosted.weblate.org/engage/99-managers-futsal-edition/"
+
+[node name="WishlistSteam" type="LinkButton" parent="MainView/VBoxContainer/Links" unique_id=816854278]
+auto_translate_mode = 2
+visible = false
+layout_mode = 2
+focus_neighbor_bottom = NodePath("../../VBoxContainer/Buttons/ContinueGame")
+focus_mode = 2
+text = "Wishlist on Steam!"
+uri = "https://store.steampowered.com/app/3334770"
+
+[node name="GoodBye" type="MarginContainer" parent="." unique_id=1342216373]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="GoodBye" unique_id=964666926]
+layout_mode = 2
+text = "Goodbye!"
+label_settings = ExtResource("5_35w66")
+horizontal_alignment = 1
+
+[node name="VersionNoteDialog" parent="." unique_id=2113760578 instance=ExtResource("6_itbqv")]
+unique_name_in_owner = true
+visible = false
+script = null
+
+[connection signal="meta_clicked" from="MainView/VBoxContainer/Top/Text" to="." method="_on_beta_description_meta_clicked"]
+[connection signal="pressed" from="MainView/VBoxContainer/VBoxContainer/Buttons/ContinueGame" to="." method="_on_continue_game_pressed"]
+[connection signal="pressed" from="MainView/VBoxContainer/VBoxContainer/Buttons/NewGame" to="." method="_on_new_game_pressed"]
+[connection signal="pressed" from="MainView/VBoxContainer/VBoxContainer/Buttons/LoadGame" to="." method="_on_load_game_pressed"]
+[connection signal="pressed" from="MainView/VBoxContainer/VBoxContainer/Buttons/Editor" to="." method="_on_editor_pressed"]
+[connection signal="pressed" from="MainView/VBoxContainer/VBoxContainer/Buttons/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="MainView/VBoxContainer/VBoxContainer/Buttons/About" to="." method="_on_about_pressed"]
+[connection signal="pressed" from="MainView/VBoxContainer/VBoxContainer/Buttons/Exit" to="." method="_on_exit_pressed"]

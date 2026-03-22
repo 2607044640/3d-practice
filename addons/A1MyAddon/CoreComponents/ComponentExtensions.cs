@@ -150,7 +150,7 @@ public static class ComponentExtensions
     /// <param name="component">要绑定的组件（通常是 this）</param>
     /// <param name="parentEntity">父实体节点（通常是 parent）</param>
     /// <param name="stateNodePath">状态节点路径，例如 "StateChart/Root/GameFlow/Exploration"</param>
-    public static void BindComponentToState(this Node component, Node parentEntity, string stateNodePath)
+    public static void BindComponentToStateNode(this Node component, Node parentEntity, string stateNodePath)
     {
         // 获取状态节点
         var stateNode = parentEntity.GetNodeOrNull(stateNodePath);
